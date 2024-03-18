@@ -24,9 +24,11 @@ function displayCategories(categories) {
   }
   const list = document.createElement('ul');
   categories.forEach(category => {
-    const listItem = document.createElement('li');
-    listItem.textContent = category;
-    list.appendChild(listItem);
+    const categoryButton = document.createElement('button');
+    categoryButton.textContent = category;
+    categoryButton.classList.add('btn', 'btn-primary', 'mb-2', 'me-2');
+    categoryButton.addEventListener('click', () => showCategoryJokes(category));
+    categoriesContainer.appendChild(categoryButton);
   });
   categoriesContainer.appendChild(list);
 }
@@ -40,26 +42,35 @@ document.getElementById('getCategories').addEventListener('click', async () => {
 //Return jokes from a specific category
 
 
+async function showCategoryJokes(category) {
+  try {
+    const fetchResponse = await fetch(`jokebook/joke/${category}`);
+    if (!fetchResponse.ok) {
+      throw new Error(`Failed to fetch jokes for category ${category}`);
+    }
+    const jokes = await fetchResponse.json();
+    displayCategoryJokes(jokes);
+  } catch (error) {
+    console.error('Error fetching jokes:', error);
+  }
+}
 
 
+function displayCategoryJokes(addedJokes) {
+  const addedJokeContainer = document.getElementById('addedJoke');
+  addedJokeContainer.innerHTML = '';
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  addedJokes.forEach(addedJoke => {
+    const jokeElement = document.createElement('div');
+    jokeElement.innerHTML = `
+      <div>
+        <p>Joke: ${addedJoke.joke}</p>
+        <p>Response: ${addedJoke.response}</p>
+      </div>
+    `;
+    addedJokeContainer.appendChild(jokeElement);
+  });
+}
 
 //////////////////////////////////////////////////////////////
 //Adding  joke
