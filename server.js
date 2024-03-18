@@ -8,13 +8,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(express.static('public'));
+
 //GET endpoint @ /jokebook/categories
 app.get('/jokebook/categories', (req, res) => {
   try {
+    console.log("is this being hit")
     if (!jokebook.categories || jokebook.categories.length === 0) {
       return res.status(404).json({ error: 'No categories found' });
     }
-
     res.json(jokebook.categories);
   } catch (error) {
     console.error('Error retrieving categories:', error);
